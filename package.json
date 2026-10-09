@@ -1,0 +1,1 @@
+{"name":"rocketmodeler-web","version":"0.1.0","type":"module","private":true,"scripts":{"start":"node scripts/server.js","test":"node --test src/tests/*.test.js","validate":"node scripts/validate.js"},"engines":{"node":">=20"}}
