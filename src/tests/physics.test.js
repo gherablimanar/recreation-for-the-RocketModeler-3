@@ -21,3 +21,20 @@ test('CG moves forward as aft propellant is consumed',()=>{const f=new Flight(de
 test('Lunar flight has zero drag and all planets produce finite trajectories',()=>{for(const planet of ['Earth','Moon','Mars']){const f=new Flight({...defaults,planet,recovery:'None'});const s=f.run();assert.ok(Number.isFinite(s.maxAltitude));assert.ok(s.maxAltitude>0);assert.ok(f.events.some(e=>e.name==='Apogee'));assert.equal(s.phase,'Landing');if(planet==='Moon')assert.ok(f.history.every(s=>s.drag===0))}});
 test('Wind direction reverses horizontal drift',()=>{const a=new Flight({...defaults,wind:2,windDirection:0}).run(),b=new Flight({...defaults,wind:2,windDirection:180}).run();assert.ok(a.x*b.x<0);near(a.maxAltitude,b.maxAltitude,.01)});
 test('Invalid integration step fails explicitly',()=>assert.throws(()=>new Flight({...defaults,dt:0})));
+
+test('Moving internal components changes balance and preserves old saved designs',async()=>{
+ const {components,validateDesign}=await import('../models/rocket.js');
+ const {loadDesign}=await import('../utils/persistence.js');
+ const original=stability(defaults).cg;
+ const moved={...defaults,engineOffset:.08,recoveryPosition:.1};
+ assert.ok(stability(moved).cg<original);
+ const masses=components(moved);
+ near(masses.find(c=>c.name==='Engine 1').x,defaults.noseLength+defaults.length-.035-.08);
+ near(masses.find(c=>c.name==='Recovery').x,defaults.noseLength+defaults.length*.1);
+ assert.deepEqual(loadDesign(JSON.stringify(moved)),moved);
+ const legacy={...defaults};delete legacy.engineOffset;delete legacy.recoveryPosition;
+ assert.deepEqual(loadDesign(JSON.stringify(legacy)),defaults);
+ assert.ok(validateDesign({...defaults,engineOffset:.3}).length);
+ assert.throws(()=>loadDesign(JSON.stringify({...defaults,recoveryPosition:2})));
+ const flight=new Flight(moved);assert.equal(flight.run().phase,'Landing');
+});

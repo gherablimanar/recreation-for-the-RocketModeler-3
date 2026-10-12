@@ -2,7 +2,7 @@
 
 Run `npm test` and `npm run validate` from the project root. No dependency installation is necessary.
 
-All 20 automated tests passed in the prepared environment. The test suite covers total mass, weighted CG, weight, drag, net force, acceleration, three planetary gravities and lunar vacuum, stable/unstable designs, integrated motor impulse/time dependence, decreasing burn mass, zero wind symmetry, nonzero wind deflection, apogee/recovery/landing, two booster separations and timestep convergence. Default .005 s and .0025 s runs must agree on apogee within 3%. Tests check functional invariants, not agreement with NASA or measured flight data.
+All 21 automated tests passed in the prepared environment. The test suite covers total mass, weighted CG, weight, drag, net force, acceleration, three planetary gravities and lunar vacuum, stable/unstable designs, integrated motor impulse/time dependence, decreasing burn mass, zero wind symmetry, nonzero wind deflection, apogee/recovery/landing, two booster separations and timestep convergence. Default .005 s and .0025 s runs must agree on apogee within 3%. Tests check functional invariants, not agreement with NASA or measured flight data.
 
 The validation command and UI Print Validation Run emit full SI inputs, component masses/positions, equations, stability, events and final numerical outputs for a run. Pause stops the UI's integration; validation computes an independent complete flight synchronously.
 
@@ -18,3 +18,5 @@ NODE_PATH=/tmp/rocket-browser/node_modules node scripts/browser-check.cjs
 ```
 
 Set CHROMIUM_PATH if Chromium is installed somewhere other than /usr/bin/chromium. The browser check does not install a browser.
+
+The interactive editor adds a regression test for moved component mass positions, changed CG, JSON round trips, legacy JSON defaults, invalid motor/recovery positions and a complete flight with moved components. `scripts/design-check.cjs` exercises all five drag handles, balance updates, per-field explanations and launching the edited design in Chromium.

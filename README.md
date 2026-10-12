@@ -17,11 +17,19 @@ The server listens on port 5173 (override using `PORT`). In a local development 
 
 Design Rocket → adjust dimensions, materials, engines and recovery → Launch Rocket → Begin Launch → countdown and flight. Pause/Resume control integration. Reset clears the flight, Restart launches the same design, and Design Rocket returns to editing. Reset to Default restores the reference design. Save/Load use JSON files; Export Results downloads SI-valued CSV. Print Validation Run computes a full run with inputs, equations, units and events.
 
+## Interactive design editor
+
+In Design Rocket, drag the green handles beside the 2D model to move fins, the motor assembly, or the recovery pack. Nose and body handles change their lengths. Fins and visible internal parts can also be dragged directly. Numeric inputs and sliders provide precise keyboard-accessible controls. Motors and recovery move along the body axis; fins move as a group. CG and CP update from the edited design and cannot be dragged independently.
+
+Every control and numerical result includes an explanation. Expand “Understand the model, markers and actions” for units, stability markers, toolbar actions and graphs. Saved designs retain component positions; older design files load with their original default positions.
+
 ## Checks
 
 ```sh
 npm test
 npm run validate
+# With the server running and the onboarding browser tools installed:
+NODE_PATH=/workspace/.rocket-browser/node_modules node scripts/design-check.cjs
 ```
 
 Node's built-in test runner is used. The browser UI has also been exercised using Chromium and Playwright; see VALIDATION.md. No external backend, API keys or services are needed.
